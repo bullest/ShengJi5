@@ -28,6 +28,7 @@ public class WelcomeActivity extends AppCompatActivity {
     private List<Player> mPlayerList = new ArrayList<Player>();
     private PlayerAdapter adapter;
     private Button startButton;
+    private Button exitButton;
 
     /**
      * Whether or not the system UI should be auto-hidden after
@@ -111,11 +112,20 @@ public class WelcomeActivity extends AppCompatActivity {
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.fullscreen_content);
         startButton = (Button) findViewById(R.id.start_button);
+        exitButton = (Button) findViewById(R.id.exit_button);
 
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setMyselfReady();
+            }
+        });
+
+        exitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UserManager.getInstance().logoutUser();
+                finish();
             }
         });
 

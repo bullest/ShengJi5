@@ -50,6 +50,7 @@ public class UserManager {
                         if ((dataSnapshot.child("player"+i).child("name").getValue()).equals("player")){
                             ref.child("player"+i).child("name").setValue(name);
                             position = i;
+                            persistUserValues(name, position);
                             EventBus.getDefault().post(new LoginSuccessEvent());
                             break;
                         }
@@ -67,14 +68,14 @@ public class UserManager {
                     Log.d("onCancelled",syncError.toString());}
             }
         });
-
-        if (position != 0){
-            persistUserValues(name, position);
-        }
     }
 
     public void logoutUser() {
         final SharedPreferences settings = getSharedPreference(Constants.LOGIN_DATA, Context.MODE_PRIVATE);
+        final SyncReference ref = WilddogSync.getInstance().getReference().child("match").child("players");
+        ref.child("player"+this.getPlayerPosition()).child("name").setValue("player");
+        ref.child("player"+this.getPlayerPosition()).child("isready").setValue(0);
+
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean(Constants.IS_LOGGED_IN, false);
         editor.remove(Constants.PLAYER_NAME);
