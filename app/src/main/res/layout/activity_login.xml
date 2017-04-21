@@ -17,9 +17,10 @@
             android:layout_height="wrap_content"
             android:layout_margin="64dp"
             android:ems="10"
+            android:hint="Input Your Name"
             android:inputType="textPersonName"
+            android:maxLength="3"
             android:paddingTop="128dp"
-            android:text="Input your name"
             android:textAlignment="center"/>
 
         <Button

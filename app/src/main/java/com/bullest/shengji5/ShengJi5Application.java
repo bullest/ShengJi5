@@ -26,6 +26,7 @@ public class ShengJi5Application extends Application implements ResourceRetrieve
     @Override
     public void onCreate() {
         super.onCreate();
+        instance = this;
 
         WilddogOptions wilddogOptions = new WilddogOptions.Builder().setSyncUrl("https://shengji5.wilddogio.com ").build();
         WilddogApp wilddogApp = WilddogApp.initializeApp(this,wilddogOptions);

@@ -1,35 +1,28 @@
 package com.bullest.shengji5;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.os.*;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-
-import com.wilddog.client.DataSnapshot;
-import com.wilddog.client.SyncError;
-import com.wilddog.client.SyncReference;
-import com.wilddog.client.ValueEventListener;
-import com.wilddog.client.WilddogSync;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class WelcomeActivity extends AppCompatActivity {
-    private List<Player> mPlayerList = new ArrayList<Player>();
-    private PlayerAdapter adapter;
-    private Button startButton;
-    private Button exitButton;
+public class GameActivity extends AppCompatActivity {
+    private RecyclerView masterCardsView;
+    private RecyclerView spadeCardsView;
+    private RecyclerView heartCardsView;
+    private RecyclerView clubCardsView;
+    private RecyclerView diamondCardsView;
+
+    private Button sendButton;
 
     /**
      * Whether or not the system UI should be auto-hidden after
@@ -105,98 +98,66 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        initPlayerList();
-
-        setContentView(R.layout.activity_welcome);
+        setContentView(R.layout.activity_game);
 
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.fullscreen_content);
-        startButton = (Button) findViewById(R.id.start_button);
-        exitButton = (Button) findViewById(R.id.exit_button);
 
-        startButton.setOnClickListener(new View.OnClickListener() {
+
+        // Set up the user interaction to manually show or hide the system UI.
+        mContentView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setMyselfReady();
+                toggle();
             }
         });
-
-        exitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                UserManager.getInstance().logoutUser();
-                finish();
-            }
-        });
-
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.player_list);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        adapter = new PlayerAdapter(mPlayerList);
-        recyclerView.setAdapter(adapter);
 
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
         findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
-    }
 
-    private void setMyselfReady() {
-        if (UserManager.getInstance().getPlayerPosition() == 5){
-            MatchManager.getInstance().initMatch();
-        }
-        SyncReference ref = WilddogSync.getInstance().getReference().child("match").child("players").child("player"+ UserManager.getInstance().getPlayerPosition());
-        ref.child("isready").setValue(1);
-    }
-
-    private void setMyselfNotReady() {
-        SyncReference ref = WilddogSync.getInstance().getReference().child("match").child("players").child("player"+ UserManager.getInstance().getPlayerPosition());
-        ref.child("isready").setValue(0);
-    }
-
-    private void initPlayerList() {
-        SyncReference ref = WilddogSync.getInstance().getReference();
-
-        ref.addValueEventListener(new ValueEventListener() {
+        sendButton = (Button)findViewById(R.id.send_button);
+        sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                mPlayerList.clear();
-                if (snapshot.getValue() != null) {
-                    for (int i = 1; i <= 5; i++){
-                        Player player;
-                        DataSnapshot playerSnapshot = snapshot.child("match").child("players").child("player"+i);
-                        if (playerSnapshot.exists()){
-                            player = new Player((long)playerSnapshot.child("position").getValue(), (String)playerSnapshot.child("name").getValue(), (long)playerSnapshot.child("isready").getValue());
-                            mPlayerList.add(i-1, player);
-                        }
-                    }
-                    adapter.notifyDataSetChanged();
-                }
-
-                Boolean areAllReady = true;
-                for (int i=0;i<5;i++){
-                    areAllReady = areAllReady && mPlayerList.get(i).isReady();
-                }
-                if (areAllReady){
-
-                    Intent intent = new Intent(WelcomeActivity.this, GameActivity.class);
-                    startActivity(intent);
-                }
-
-            }
-
-            @Override
-            public void onCancelled(SyncError error) {
-
+            public void onClick(View view) {
+                GameManager.getInstance().initGame();
             }
         });
-    }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        setMyselfNotReady();
+        masterCardsView = (RecyclerView) findViewById(R.id.self_game_master_cards_view);
+        LinearLayoutManager layoutManager_master = new LinearLayoutManager(this);
+        layoutManager_master.setOrientation(LinearLayoutManager.HORIZONTAL);
+        masterCardsView.setLayoutManager(layoutManager_master);
+        CardsAdapter masterCardsAdapter = new CardsAdapter(GameManager.getInstance().getPlayer_cards_list_master());
+        masterCardsAdapter.notifyDataSetChanged();
+        masterCardsView.setAdapter(new CardsAdapter(GameManager.getInstance().getPlayer_cards_list_master()));
+
+        spadeCardsView = (RecyclerView) findViewById(R.id.self_game_spade_cards_view);
+        LinearLayoutManager layoutManager_spade = new LinearLayoutManager(this);
+        layoutManager_spade.setOrientation(LinearLayoutManager.HORIZONTAL);
+        spadeCardsView.setLayoutManager(layoutManager_spade);
+        spadeCardsView.setAdapter(new CardsAdapter(GameManager.getInstance().getPlayer_cards_list_spade()));
+
+        heartCardsView = (RecyclerView) findViewById(R.id.self_game_heart_cards_view);
+        LinearLayoutManager layoutManager_heart = new LinearLayoutManager(this);
+        layoutManager_heart.setOrientation(LinearLayoutManager.HORIZONTAL);
+        heartCardsView.setLayoutManager(layoutManager_heart );
+        heartCardsView.setAdapter(new CardsAdapter(GameManager.getInstance().getPlayer_cards_list_heart()));
+
+        clubCardsView = (RecyclerView) findViewById(R.id.self_game_club_cards_view);
+        LinearLayoutManager layoutManager_club = new LinearLayoutManager(this);
+        layoutManager_club.setOrientation(LinearLayoutManager.HORIZONTAL);
+        clubCardsView.setLayoutManager(layoutManager_club);
+        clubCardsView.setAdapter(new CardsAdapter(GameManager.getInstance().getPlayer_cards_list_club()));
+
+        diamondCardsView = (RecyclerView) findViewById(R.id.self_game_diamond_cards_view);
+        LinearLayoutManager layoutManager_diamond = new LinearLayoutManager(this);
+        layoutManager_diamond.setOrientation(LinearLayoutManager.HORIZONTAL);
+        diamondCardsView.setLayoutManager(layoutManager_diamond);
+        diamondCardsView.setAdapter(new CardsAdapter(GameManager.getInstance().getPlayer_cards_list_diamond()));
+
     }
 
     @Override
