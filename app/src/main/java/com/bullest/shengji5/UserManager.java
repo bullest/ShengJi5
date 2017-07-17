@@ -47,7 +47,7 @@ public class UserManager {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (int i=1;i<=5;i++){
                     if(dataSnapshot.getValue()!=null){
-                        if ((dataSnapshot.child("player"+i).child("name").getValue()).equals("player")){
+                        if ((dataSnapshot.child("player"+i).child("name").getValue()).equals("player") || name.contains("test")){
                             ref.child("player"+i).child("name").setValue(name);
                             position = i;
                             persistUserValues(name, position);

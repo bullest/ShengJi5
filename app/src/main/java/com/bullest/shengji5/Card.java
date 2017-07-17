@@ -1,5 +1,6 @@
 package com.bullest.shengji5;
 
+import java.util.Comparator;
 import java.util.HashMap;
 
 import static java.lang.Math.toIntExact;
@@ -8,7 +9,7 @@ import static java.lang.Math.toIntExact;
  * Created by yunfezhang on 4/22/17.
  */
 
-public class Card {
+public class Card{
 
     private CARD_SUIT suit;
     private int value;

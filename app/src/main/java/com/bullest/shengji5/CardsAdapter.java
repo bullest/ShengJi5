@@ -1,5 +1,6 @@
 package com.bullest.shengji5;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -17,6 +21,12 @@ class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> {
     private List<Card> mCardList;
 
     public CardsAdapter(ArrayList<Card> cardList) {
+        Collections.sort(cardList, new Comparator<Card>() {
+            @Override
+            public int compare(Card card, Card t1) {
+                return card.getValue() < t1.getValue() ? -1 : card.getValue() == t1.getValue() ? 0 : 1;
+            }
+        });
         mCardList = cardList;
     }
 
@@ -32,6 +42,11 @@ class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.card_suit_view.setText(mCardList.get(position).getDisplay_suit());
         holder.card_value_view.setText(mCardList.get(position).getDisplay_value());
+        if (mCardList.get(position).getSuit() == CARD_SUIT.HEART ||
+                mCardList.get(position).getSuit() == CARD_SUIT.DIAMOND ||
+                mCardList.get(position).aBigJoker()) {
+            holder.card_suit_view.setTextColor(Color.RED);
+        }
     }
 
     @Override

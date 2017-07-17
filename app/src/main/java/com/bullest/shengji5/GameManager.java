@@ -11,7 +11,11 @@ import com.wilddog.client.SyncReference;
 import com.wilddog.client.ValueEventListener;
 import com.wilddog.client.WilddogSync;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -28,6 +32,7 @@ public class GameManager {
     private ArrayList<Card> player_cards_list_club = new ArrayList<>();
     private ArrayList<Card> player_cards_list_diamond = new ArrayList<>();
     private ArrayList<Card> player_cards_list_heart = new ArrayList<>();
+    private ArrayList<Card> player_cards_list = new ArrayList<>();
 
 
     private int currentBoss;
@@ -61,91 +66,72 @@ public class GameManager {
         return singleton;
     }
 
-    public void register_cards_list() {
-        final SyncReference ref_master = WilddogSync.getInstance().getReference().child("game").child("game_cards")
-                .child("game_card_"+UserManager.getInstance().getPlayerPosition()).child("master_cards");
-        ref_master.addValueEventListener(new ValueEventListener() {
+    public void register_card_list() {
+        final SyncReference ref_all = WilddogSync.getInstance().getReference().child("game_cards")
+                .child("game_card_"+UserManager.getInstance().getPlayerPosition()).child("all_cards");
+
+        ref_all.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
+                player_cards_list.clear();
+                Card card = null;
                 for (int i = 0; snapshot.child(Integer.toString(i)).exists(); i++) {
                     HashMap map = (HashMap) snapshot.child(Integer.toString(i)).getValue();
-                    Card card = new Card((String) map.get("suit"), (long) map.get("value"));
-                    player_cards_list_master.add(card);
+                    card = new Card((String) map.get("suit"), (long) map.get("value"));
 
+                    if (card.getValue() == 2 || card.getValue() == 3) {
+                        player_cards_list_master.add(card);
+                        EventBus.getDefault().post(new PlayerCardsChangeEvent(CARD_SUIT.JOKER));
+                        Log.d("diapatching", "master");
+                    } else {
+                        Log.d("diapatching", "non");
+                        switch (card.getSuit()){
+                            case JOKER:
+                                player_cards_list_master.add(card);
+                                EventBus.getDefault().post(new PlayerCardsChangeEvent(CARD_SUIT.JOKER));
+                                break;
+                            case SPADE:
+                                player_cards_list_spade.add(card);
+                                EventBus.getDefault().post(new PlayerCardsChangeEvent(CARD_SUIT.SPADE));
+                                break;
+                            case HEART:
+                                player_cards_list_heart.add(card);
+                                EventBus.getDefault().post(new PlayerCardsChangeEvent(CARD_SUIT.HEART));
+                                break;
+                            case DIAMOND:
+                                player_cards_list_diamond.add(card);
+                                EventBus.getDefault().post(new PlayerCardsChangeEvent(CARD_SUIT.DIAMOND));
+                                break;
+                            case CLUB:
+                                player_cards_list_club.add(card);
+                                EventBus.getDefault().post(new PlayerCardsChangeEvent(CARD_SUIT.CLUB));
+                                break;
+                        }
+                    }
+
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
+
+                Collections.sort(player_cards_list_master, new SingleCardComparator());
+                EventBus.getDefault().post(new PlayerCardsChangeEvent(CARD_SUIT.JOKER));
+                Collections.sort(player_cards_list_spade, new SingleCardComparator());
+                EventBus.getDefault().post(new PlayerCardsChangeEvent(CARD_SUIT.SPADE));
+                Collections.sort(player_cards_list_heart, new SingleCardComparator());
+                EventBus.getDefault().post(new PlayerCardsChangeEvent(CARD_SUIT.HEART));
+                Collections.sort(player_cards_list_club, new SingleCardComparator());
+                EventBus.getDefault().post(new PlayerCardsChangeEvent(CARD_SUIT.CLUB));
+                Collections.sort(player_cards_list_diamond, new SingleCardComparator());
+                EventBus.getDefault().post(new PlayerCardsChangeEvent(CARD_SUIT.DIAMOND));
+
             }
 
             @Override
             public void onCancelled(SyncError error) {
-
-            }
-        });
-        final SyncReference ref_spade = WilddogSync.getInstance().getReference().child("game").child("game_cards")
-                .child("game_card_"+UserManager.getInstance().getPlayerPosition()).child("spade_cards");
-        ref_spade.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                for (int i = 0; snapshot.child(Integer.toString(i)).exists(); i++) {
-                    HashMap map = (HashMap) snapshot.child(Integer.toString(i)).getValue();
-                    Card card = new Card((String) map.get("suit"), (long) map.get("value"));
-                    player_cards_list_spade.add(card);
-                }
-            }
-
-            @Override
-            public void onCancelled(SyncError error) {
-
-            }
-        });
-        final SyncReference ref_heart = WilddogSync.getInstance().getReference().child("game").child("game_cards")
-                .child("game_card_"+UserManager.getInstance().getPlayerPosition()).child("heart_cards");
-        ref_heart.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                for (int i = 0; snapshot.child(Integer.toString(i)).exists(); i++) {
-                    HashMap map = (HashMap) snapshot.child(Integer.toString(i)).getValue();
-                    Card card = new Card((String) map.get("suit"), (long) map.get("value"));
-                    player_cards_list_heart.add(card);
-                }
-            }
-
-            @Override
-            public void onCancelled(SyncError error) {
-
-            }
-        });
-        final SyncReference ref_club = WilddogSync.getInstance().getReference().child("game").child("game_cards")
-                .child("game_card_"+UserManager.getInstance().getPlayerPosition()).child("club_cards");
-        ref_club.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                for (int i = 0; snapshot.child(Integer.toString(i)).exists(); i++) {
-                    HashMap map = (HashMap) snapshot.child(Integer.toString(i)).getValue();
-                    Card card = new Card((String) map.get("suit"), (long) map.get("value"));
-                    player_cards_list_club.add(card);
-                }
-            }
-
-            @Override
-            public void onCancelled(SyncError error) {
-
-            }
-        });
-        final SyncReference ref_diamond = WilddogSync.getInstance().getReference().child("game").child("game_cards")
-                .child("game_card_"+UserManager.getInstance().getPlayerPosition()).child("diamond_cards");
-        ref_diamond.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                for (int i = 0; snapshot.child(Integer.toString(i)).exists(); i++) {
-                    HashMap map = (HashMap) snapshot.child(Integer.toString(i)).getValue();
-                    Card card = new Card((String) map.get("suit"), (long) map.get("value"));
-                    player_cards_list_diamond.add(card);
-                }
-            }
-
-            @Override
-            public void onCancelled(SyncError error) {
-
+                dispatchCards();
             }
         });
     }
@@ -155,74 +141,66 @@ public class GameManager {
     }
 
     public void initGame() {
-        WilddogSync.getInstance().getReference().child("game").child("boss").setValue(currentBoss);
         WilddogSync.getInstance().getReference().child("game").child("boss_companion").setValue(0);
         WilddogSync.getInstance().getReference().child("game").child("game_suit").setValue(0);
-        WilddogSync.getInstance().getReference().child("game").child("game_suit").setValue(0);
+        WilddogSync.getInstance().getReference().child("game").child("boss_card").setValue(new Card(CARD_SUIT.JOKER, 0));
         for (int i = 1; i <= 5; i++) {
             WilddogSync.getInstance().getReference().child("game").child("game_point").child("player_point_"+i).setValue(0);
         }
-        clearAllCards();
-        register_cards_list();
-        dispatchCards();
+        register_card_list();
 
     }
 
-    private void clearAllCards() {
-        WilddogSync.getInstance().getReference().child("game").child("game_cards").child("game_card_5").child("club_cards").setValue(player_cards_list_club);
-        WilddogSync.getInstance().getReference().child("game").child("game_cards").child("game_card_5").child("spade_cards").setValue(player_cards_list_spade);
-//        WilddogSync.getInstance().getReference().child("game").child("game_cards").child("game_card_1").child("club_cards").setValue(player_cards_list_club);
-//        WilddogSync.getInstance().getReference().child("game").child("game_cards").child("game_card_1").child("club_cards").setValue(player_cards_list_club);
-//        WilddogSync.getInstance().getReference().child("game").child("game_cards").child("game_card_1").child("club_cards").setValue(player_cards_list_club);
 
-    }
+    public void dispatchCards() {
+        ArrayList<Card> allDeck;
+        ArrayList<Card> game_card_1 = new ArrayList<>();
+        ArrayList<Card> game_card_2 = new ArrayList<>();
+        ArrayList<Card> game_card_3 = new ArrayList<>();
+        ArrayList<Card> game_card_4 = new ArrayList<>();
+        ArrayList<Card> game_card_5 = new ArrayList<>();
 
-    private void dispatchCards() {
-        ArrayList<Card> allDeck = new ArrayList<>();
-        ArrayList<Card> game_card_0 = new ArrayList<>();
+        allDeck = generateAllDeck();
 
-        ArrayList<Card> game_card_1_master = new ArrayList<>();
-        ArrayList<Card> game_card_1_spade = new ArrayList<>();
-        ArrayList<Card> game_card_1_heart = new ArrayList<>();
-        ArrayList<Card> game_card_1_club = new ArrayList<>();
-        ArrayList<Card> game_card_1_diamond = new ArrayList<>();
+        dispatchSecretCard(7, allDeck);
 
-        ArrayList<Card> game_card_2_master = new ArrayList<>();
-        ArrayList<Card> game_card_2_spade = new ArrayList<>();
-        ArrayList<Card> game_card_2_heart = new ArrayList<>();
-        ArrayList<Card> game_card_2_club = new ArrayList<>();
-        ArrayList<Card> game_card_2_diamond = new ArrayList<>();
-
-        ArrayList<Card> game_card_3_master = new ArrayList<>();
-        ArrayList<Card> game_card_3_spade = new ArrayList<>();
-        ArrayList<Card> game_card_3_heart = new ArrayList<>();
-        ArrayList<Card> game_card_3_club = new ArrayList<>();
-        ArrayList<Card> game_card_3_diamond = new ArrayList<>();
-
-        ArrayList<Card> game_card_4_master = new ArrayList<>();
-        ArrayList<Card> game_card_4_spade = new ArrayList<>();
-        ArrayList<Card> game_card_4_heart = new ArrayList<>();
-        ArrayList<Card> game_card_4_club = new ArrayList<>();
-        ArrayList<Card> game_card_4_diamond = new ArrayList<>();
-
-        ArrayList<Card> game_card_5_master = new ArrayList<>();
-        ArrayList<Card> game_card_5_spade = new ArrayList<>();
-        ArrayList<Card> game_card_5_heart = new ArrayList<>();
-        ArrayList<Card> game_card_5_club = new ArrayList<>();
-        ArrayList<Card> game_card_5_diamond = new ArrayList<>();
-
-        for (int j = 0; j <= 2; j++) {
-            for (int i = 2; i <= 14; i++) {
-                allDeck.add(new Card(CARD_SUIT.CLUB, i));
-                allDeck.add(new Card(CARD_SUIT.DIAMOND, i));
-                allDeck.add(new Card(CARD_SUIT.HEART, i));
-                allDeck.add(new Card(CARD_SUIT.SPADE, i));
-            }
-            allDeck.add(new Card(CARD_SUIT.JOKER, Constants.BIG_JOKER_VALUE));
-            allDeck.add(new Card(CARD_SUIT.JOKER, Constants.LITTLE_JOKER_VALUE));
+        for (int i = 0; i < 31; i++) {
+            game_card_1.add(pickCardFrom(allDeck));
+            game_card_2.add(pickCardFrom(allDeck));
+            game_card_3.add(pickCardFrom(allDeck));
+            game_card_4.add(pickCardFrom(allDeck));
+            game_card_5.add(pickCardFrom(allDeck));
         }
 
-        for (int i = 0; i < 7; i++){
+        WilddogSync.getInstance().getReference().child("game_cards").child("game_card_1").child("all_cards")
+                .setValue(game_card_1);
+        WilddogSync.getInstance().getReference().child("game_cards").child("game_card_2").child("all_cards")
+                .setValue(game_card_2);
+        WilddogSync.getInstance().getReference().child("game_cards").child("game_card_3").child("all_cards")
+                .setValue(game_card_3);
+        WilddogSync.getInstance().getReference().child("game_cards").child("game_card_4").child("all_cards")
+                .setValue(game_card_4);
+        WilddogSync.getInstance().getReference().child("game_cards").child("game_card_5").child("all_cards")
+                .setValue(game_card_5);
+
+    }
+
+    private Card pickCardFrom(ArrayList<Card> allDeck) {
+        Random rand = new Random();
+        Card selectedCard;
+        int randomInt;
+        randomInt = rand.nextInt(allDeck.size());
+
+        selectedCard = allDeck.get(randomInt);
+        allDeck.remove(randomInt);
+
+        return selectedCard;
+    }
+
+    private void dispatchSecretCard(int cardNumber, ArrayList<Card> allDeck) {
+        ArrayList<Card> game_card_0 = new ArrayList<>();
+
+        for (int i = 0; i < cardNumber; i++){
             Random rand = new Random();
             int randomInt = rand.nextInt(allDeck.size());
             game_card_0.add(allDeck.get(randomInt));
@@ -230,173 +208,23 @@ public class GameManager {
         }
         WilddogSync.getInstance().getReference().child("game").child("game_cards").child("game_card_0").setValue(game_card_0);
 
-        for (int i = 0; i < 31; i++) {
-            Random rand;
-            int randomInt;
+    }
 
-            rand = new Random();
-            randomInt = rand.nextInt(allDeck.size());
-            switch (allDeck.get(randomInt).getSuit()){
-                case JOKER:
-                    game_card_1_master.add(allDeck.get(randomInt));
-                    WilddogSync.getInstance().getReference().child("game").child("game_cards")
-                            .child("game_card_1").child("master_cards").setValue(game_card_1_master);
-                    break;
-                case SPADE:
-                    game_card_1_spade.add(allDeck.get(randomInt));
-                    WilddogSync.getInstance().getReference().child("game").child("game_cards")
-                            .child("game_card_1").child("spade_cards").setValue(game_card_1_spade);
-                    break;
-                case HEART:
-                    game_card_1_heart.add(allDeck.get(randomInt));
-                    WilddogSync.getInstance().getReference().child("game").child("game_cards")
-                            .child("game_card_1").child("heart_cards").setValue(game_card_1_heart);
-                    break;
-                case CLUB:
-                    game_card_1_club.add(allDeck.get(randomInt));
-                    WilddogSync.getInstance().getReference().child("game").child("game_cards")
-                            .child("game_card_1").child("club_cards").setValue(game_card_1_club);
-                    break;
-                case DIAMOND:
-                    game_card_1_diamond.add(allDeck.get(randomInt));
-                    WilddogSync.getInstance().getReference().child("game").child("game_cards")
-                            .child("game_card_1").child("diamond_cards").setValue(game_card_1_diamond);
-                    break;
+    private ArrayList<Card> generateAllDeck() {
+        ArrayList<Card> allCards = new ArrayList<>();
+
+        for (int j = 0; j <= 2; j++) {
+            for (int i = 2; i <= 14; i++) {
+                allCards.add(new Card(CARD_SUIT.CLUB, i));
+                allCards.add(new Card(CARD_SUIT.DIAMOND, i));
+                allCards.add(new Card(CARD_SUIT.HEART, i));
+                allCards.add(new Card(CARD_SUIT.SPADE, i));
             }
-            allDeck.remove(randomInt);
-
-            rand = new Random();
-            randomInt = rand.nextInt(allDeck.size());
-            switch (allDeck.get(randomInt).getSuit()){
-                case JOKER:
-                    game_card_2_master.add(allDeck.get(randomInt));
-                    WilddogSync.getInstance().getReference().child("game").child("game_cards")
-                            .child("game_card_2").child("master_cards").setValue(game_card_2_master);
-                    break;
-                case SPADE:
-                    game_card_2_spade.add(allDeck.get(randomInt));
-                    WilddogSync.getInstance().getReference().child("game").child("game_cards")
-                            .child("game_card_2").child("spade_cards").setValue(game_card_2_spade);
-                    break;
-                case HEART:
-                    game_card_2_heart.add(allDeck.get(randomInt));
-                    WilddogSync.getInstance().getReference().child("game").child("game_cards")
-                            .child("game_card_2").child("heart_cards").setValue(game_card_2_heart);
-                    break;
-                case CLUB:
-                    game_card_2_club.add(allDeck.get(randomInt));
-                    WilddogSync.getInstance().getReference().child("game").child("game_cards")
-                            .child("game_card_2").child("club_cards").setValue(game_card_2_club);
-                    break;
-                case DIAMOND:
-                    game_card_2_diamond.add(allDeck.get(randomInt));
-                    WilddogSync.getInstance().getReference().child("game").child("game_cards")
-                            .child("game_card_2").child("diamond_cards").setValue(game_card_2_diamond);
-                    break;
-            }
-            allDeck.remove(randomInt);
-
-            rand = new Random();
-            randomInt = rand.nextInt(allDeck.size());
-            switch (allDeck.get(randomInt).getSuit()){
-                case JOKER:
-                    game_card_3_master.add(allDeck.get(randomInt));
-                    WilddogSync.getInstance().getReference().child("game").child("game_cards")
-                            .child("game_card_3").child("master_cards").setValue(game_card_3_master);
-                    break;
-                case SPADE:
-                    game_card_3_spade.add(allDeck.get(randomInt));
-                    WilddogSync.getInstance().getReference().child("game").child("game_cards")
-                            .child("game_card_3").child("spade_cards").setValue(game_card_3_spade);
-                    break;
-                case HEART:
-                    game_card_3_heart.add(allDeck.get(randomInt));
-                    WilddogSync.getInstance().getReference().child("game").child("game_cards")
-                            .child("game_card_3").child("heart_cards").setValue(game_card_3_heart);
-                    break;
-                case CLUB:
-                    game_card_3_club.add(allDeck.get(randomInt));
-                    WilddogSync.getInstance().getReference().child("game").child("game_cards")
-                            .child("game_card_3").child("club_cards").setValue(game_card_3_club);
-                    break;
-                case DIAMOND:
-                    game_card_3_diamond.add(allDeck.get(randomInt));
-                    WilddogSync.getInstance().getReference().child("game").child("game_cards")
-                            .child("game_card_3").child("diamond_cards").setValue(game_card_3_diamond);
-                    break;
-            }
-            allDeck.remove(randomInt);
-
-
-            rand = new Random();
-            randomInt = rand.nextInt(allDeck.size());
-            switch (allDeck.get(randomInt).getSuit()){
-                case JOKER:
-                    game_card_4_master.add(allDeck.get(randomInt));
-                    WilddogSync.getInstance().getReference().child("game").child("game_cards")
-                            .child("game_card_4").child("master_cards").setValue(game_card_4_master);
-                    break;
-                case SPADE:
-                    game_card_4_spade.add(allDeck.get(randomInt));
-                    WilddogSync.getInstance().getReference().child("game").child("game_cards")
-                            .child("game_card_4").child("spade_cards").setValue(game_card_4_spade);
-                    break;
-                case HEART:
-                    game_card_4_heart.add(allDeck.get(randomInt));
-                    WilddogSync.getInstance().getReference().child("game").child("game_cards")
-                            .child("game_card_4").child("heart_cards").setValue(game_card_4_heart);
-                    break;
-                case CLUB:
-                    game_card_4_club.add(allDeck.get(randomInt));
-                    WilddogSync.getInstance().getReference().child("game").child("game_cards")
-                            .child("game_card_1").child("club_cards").setValue(game_card_4_club);
-                    break;
-                case DIAMOND:
-                    game_card_4_diamond.add(allDeck.get(randomInt));
-                    WilddogSync.getInstance().getReference().child("game").child("game_cards")
-                            .child("game_card_4").child("diamond_cards").setValue(game_card_4_diamond);
-                    break;
-            }
-            allDeck.remove(randomInt);
-
-
-            rand = new Random();
-            randomInt = rand.nextInt(allDeck.size());
-            switch (allDeck.get(randomInt).getSuit()){
-                case JOKER:
-                    game_card_5_master.add(allDeck.get(randomInt));
-                    WilddogSync.getInstance().getReference().child("game").child("game_cards")
-                            .child("game_card_5").child("master_cards").setValue(game_card_5_master);
-                    break;
-                case SPADE:
-                    game_card_5_spade.add(allDeck.get(randomInt));
-                    WilddogSync.getInstance().getReference().child("game").child("game_cards")
-                            .child("game_card_5").child("spade_cards").setValue(game_card_5_spade);
-                    break;
-                case HEART:
-                    game_card_5_heart.add(allDeck.get(randomInt));
-                    WilddogSync.getInstance().getReference().child("game").child("game_cards")
-                            .child("game_card_5").child("heart_cards").setValue(game_card_5_heart);
-                    break;
-                case CLUB:
-                    game_card_5_club.add(allDeck.get(randomInt));
-                    WilddogSync.getInstance().getReference().child("game").child("game_cards")
-                            .child("game_card_5").child("club_cards").setValue(game_card_5_club);
-                    break;
-                case DIAMOND:
-                    game_card_5_diamond.add(allDeck.get(randomInt));
-                    WilddogSync.getInstance().getReference().child("game").child("game_cards")
-                            .child("game_card_5").child("diamond_cards").setValue(game_card_5_diamond);
-                    break;
-            }
-            allDeck.remove(randomInt);
-
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            allCards.add(new Card(CARD_SUIT.JOKER, Constants.BIG_JOKER_VALUE));
+            allCards.add(new Card(CARD_SUIT.JOKER, Constants.LITTLE_JOKER_VALUE));
         }
+
+        return allCards;
     }
 
     public int getCurrentBoss() {
