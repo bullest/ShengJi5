@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">ShengJi5</string>
+    <string name="app_name">五人升级</string>
 
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
-    <string name="title_activity_welcome">WelcomeActivity</string>
+    <string name="title_activity_welcome">五人升级</string>
 
     <string name="title_activity_game">GameActivity</string>
 </resources>

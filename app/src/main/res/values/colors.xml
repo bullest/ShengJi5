@@ -9,4 +9,6 @@
     <color name="black_overlay">#66000000</color>
 
     <color name="ready_status">#8bc34a</color>
+    <color name="colorBackGreen">#044208</color>
+    <color name="colorBackSecond">#28692C</color>
 </resources>

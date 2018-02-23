@@ -1,5 +1,7 @@
 package com.bullest.shengji5;
 
+import com.bullest.shengji5.data.Card;
+
 /**
  * Created by yunfezhang on 5/6/17.
  */

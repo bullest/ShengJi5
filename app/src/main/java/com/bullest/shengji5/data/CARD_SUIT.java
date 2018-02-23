@@ -1,4 +1,4 @@
-package com.bullest.shengji5;
+package com.bullest.shengji5.data;
 
 /**
  * Created by yunfezhang on 4/22/17.

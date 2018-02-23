@@ -1,10 +1,10 @@
 package com.bullest.shengji5;
 
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.bullest.shengji5.data.CARD_SUIT;
+import com.bullest.shengji5.data.Card;
 import com.wilddog.client.DataSnapshot;
 import com.wilddog.client.SyncError;
 import com.wilddog.client.SyncReference;
@@ -14,10 +14,8 @@ import com.wilddog.client.WilddogSync;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -110,7 +108,7 @@ public class GameManager {
                     }
 
                     try {
-                        Thread.sleep(100);
+                        Thread.sleep(1);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

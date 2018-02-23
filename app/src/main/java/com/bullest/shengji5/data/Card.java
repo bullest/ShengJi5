@@ -1,9 +1,8 @@
-package com.bullest.shengji5;
+package com.bullest.shengji5.data;
 
-import java.util.Comparator;
+import com.bullest.shengji5.Constants;
+
 import java.util.HashMap;
-
-import static java.lang.Math.toIntExact;
 
 /**
  * Created by yunfezhang on 4/22/17.
