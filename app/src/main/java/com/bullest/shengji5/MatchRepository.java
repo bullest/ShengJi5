@@ -9,14 +9,14 @@ import com.wilddog.client.WilddogSync;
  * Created by yunfezhang on 4/23/17.
  */
 
-public class MatchManager {
+public class MatchRepository {
     private static final Object syncLock = new Object();
-    private static MatchManager singleton;
+    private static MatchRepository singleton;
 
-    public static MatchManager getInstance() {
+    public static MatchRepository getInstance() {
         synchronized (syncLock) {
             if (singleton == null) {
-                singleton = new MatchManager();
+                singleton = new MatchRepository();
             }
         }
         return singleton;

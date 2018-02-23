@@ -43,13 +43,20 @@
         android:layout_weight="2"
         android:orientation="horizontal"
         android:id="@+id/game_suit_display_view">
-        <include layout="@layout/card_item"
-            android:id="@+id/game_suit_display_card_1"/>
-        <include layout="@layout/card_item"
-                 android:id="@+id/game_suit_display_card_2"/>
-        <include layout="@layout/card_item"
-                 android:id="@+id/game_suit_display_card_3"/>
+        <com.bullest.shengji5.view.PokerCardView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/game_suit_display_card_1">
+        </com.bullest.shengji5.view.PokerCardView>
+        <com.bullest.shengji5.view.PokerCardView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/game_suit_display_card_2">
+        </com.bullest.shengji5.view.PokerCardView>
+        <com.bullest.shengji5.view.PokerCardView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/game_suit_display_card_3">
+        </com.bullest.shengji5.view.PokerCardView>
     </LinearLayout>
-
-
 </LinearLayout>
