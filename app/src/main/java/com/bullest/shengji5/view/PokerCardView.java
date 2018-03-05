@@ -34,16 +34,18 @@ public class PokerCardView extends CardView implements Checkable{
     }
 
     public void setCard(Card card) {
-        CARD_SUIT cardSuit = card.getSuit();
-        cardSuitView.setText(card.getDisplay_suit());
-        cardValueView.setText(card.getDisplay_value());
-        if (cardSuit == CARD_SUIT.HEART ||
-                cardSuit == CARD_SUIT.DIAMOND ||
-                card.aBigJoker()) {
-            cardSuitView.setTextColor(Color.RED);
+        if (card != null) {
+            CARD_SUIT cardSuit = card.getSuit();
+            cardSuitView.setText(card.getDisplay_suit());
+            cardValueView.setText(card.getDisplay_value());
+            if (cardSuit == CARD_SUIT.HEART ||
+                    cardSuit == CARD_SUIT.DIAMOND ||
+                    card.aBigJoker()) {
+                cardSuitView.setTextColor(Color.RED);
+            }
+            invalidate();
+            requestLayout();
         }
-        invalidate();
-        requestLayout();
     }
 
     @Override

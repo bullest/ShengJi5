@@ -15,6 +15,8 @@ public class Card{
     private String display_value;
     private String display_suit;
 
+    public Card() {}
+
     public Card(HashMap<String, String> value) {
     }
 

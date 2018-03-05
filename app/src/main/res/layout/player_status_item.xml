@@ -1,62 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    android:background="@drawable/border2">
+
     <TextView
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
         android:id="@+id/player_position_view"
-        android:layout_weight="1"
-        android:text="1"/>
-    <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="4"
-        android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:id="@+id/player_name_view"
-                android:text="name"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:id="@+id/player_grade_view"
-                android:text="6"/>
-        </LinearLayout>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/player_point"
-            android:text="100Fen"/>
+        android:layout_height="0dp"
+        android:background="@drawable/border"
+        android:textStyle="bold"
+        android:paddingStart="2dp"
+        app:layout_constraintBottom_toTopOf="@id/guideline"
+        app:layout_constraintEnd_toStartOf="@+id/player_name_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="1"/>
 
-    </LinearLayout>
+    <TextView
+        android:id="@+id/player_name_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:paddingStart="2dp"
+        android:background="@drawable/border"
+        app:layout_constraintStart_toEndOf="@id/player_position_view"
+        app:layout_constraintEnd_toStartOf="@id/player_grade_view"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/guideline"
+        tools:text="Tink"/>
+
+    <TextView
+        android:id="@+id/player_grade_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:paddingStart="2dp"
+        android:background="@drawable/border"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/player_name_view"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/guideline"
+        tools:text="5"/>
+
+
+    <com.bullest.shengji5.view.PokerCardView
+        android:id="@+id/game_friend_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/game_suit_display_card"
+        app:layout_constraintTop_toBottomOf="@id/guideline">
+    </com.bullest.shengji5.view.PokerCardView>
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="2"
+        android:id="@+id/game_suit_display_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border"
         android:orientation="horizontal"
-        android:id="@+id/game_suit_display_view">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/game_friend_card"
+        app:layout_constraintEnd_toStartOf="@id/player_point"
+        app:layout_constraintTop_toBottomOf="@id/guideline">
+
         <com.bullest.shengji5.view.PokerCardView
+            android:id="@+id/game_suit_display_card_1"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/game_suit_display_card_1">
+            android:layout_height="wrap_content">
         </com.bullest.shengji5.view.PokerCardView>
+
         <com.bullest.shengji5.view.PokerCardView
+            android:id="@+id/game_suit_display_card_2"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/game_suit_display_card_2">
+            android:layout_height="wrap_content">
         </com.bullest.shengji5.view.PokerCardView>
+
         <com.bullest.shengji5.view.PokerCardView
+            android:id="@+id/game_suit_display_card_3"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/game_suit_display_card_3">
+            android:layout_height="wrap_content">
         </com.bullest.shengji5.view.PokerCardView>
     </LinearLayout>
-</LinearLayout>
+
+    <TextView
+        android:id="@+id/player_point"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="100Fen"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/game_suit_display_card"
+        app:layout_constraintTop_toBottomOf="@id/guideline"/>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.3"
+        />
+
+</android.support.constraint.ConstraintLayout>

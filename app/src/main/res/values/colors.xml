@@ -11,4 +11,6 @@
     <color name="ready_status">#8bc34a</color>
     <color name="colorBackGreen">#044208</color>
     <color name="colorBackSecond">#28692C</color>
+
+    <color name="colorBlack">#000000</color>
 </resources>

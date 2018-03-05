@@ -65,6 +65,8 @@ public class WelcomeActivity extends AppCompatActivity {
                 recyclerView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
                 if (mWelcomeViewModel.isAllReady()) {
+//                    SelfSingleton.getInstance().setSelfPostion(mWelcomeViewModel.getAvailablePosition());
+                    SelfSingleton.getInstance().setSelfPostion(5);
                     Intent intent = new Intent(WelcomeActivity.this, GameActivity.class);
                     startActivity(intent);
                 }
