@@ -21,6 +21,7 @@ public class PokerCardView extends CardView implements Checkable{
 
     View rootView;
     TextView cardValueView, cardSuitView;
+    private Boolean isChecked = false;
 
     public PokerCardView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -43,6 +44,11 @@ public class PokerCardView extends CardView implements Checkable{
                     card.aBigJoker()) {
                 cardSuitView.setTextColor(Color.RED);
             }
+            if (isChecked) {
+                rootView.setBackgroundColor(Color.BLUE);
+            } else {
+                rootView.setBackgroundColor(Color.WHITE);
+            }
             invalidate();
             requestLayout();
         }
@@ -50,16 +56,24 @@ public class PokerCardView extends CardView implements Checkable{
 
     @Override
     public void setChecked(boolean b) {
-
+        isChecked = b;
     }
 
     @Override
     public boolean isChecked() {
-        return false;
+        return isChecked;
     }
 
     @Override
     public void toggle() {
+        setChecked(!isChecked());
+    }
 
+    public void updateUI() {
+        if (isChecked) {
+            rootView.setBackgroundColor(Color.BLUE);
+        } else {
+            rootView.setBackgroundColor(Color.WHITE);
+        }
     }
 }

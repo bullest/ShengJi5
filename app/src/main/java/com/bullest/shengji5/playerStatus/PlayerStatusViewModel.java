@@ -26,4 +26,8 @@ public class PlayerStatusViewModel extends ViewModel {
     public void resetAllPlayerStatus() {
         PlayerStatusRepository.getInstance().resetStatus();
     }
+
+    public void setSelfReady() {
+        PlayerStatusRepository.getInstance().setSelfReady();
+    }
 }

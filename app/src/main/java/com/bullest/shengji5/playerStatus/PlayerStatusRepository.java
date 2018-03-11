@@ -30,6 +30,7 @@ public class PlayerStatusRepository {
     final MutableLiveData<List<PlayerStatus>> otherPlayerStatus = new MutableLiveData<>();
     final MutableLiveData<PlayerStatus> selfStatus = new MutableLiveData<>();
     private List<PlayerStatus> allPlayerStatus;
+    final MutableLiveData<Boolean> isAllReady = new MutableLiveData<>();
 
     public PlayerStatusRepository() {
         this.selfPosition = SelfSingleton.getInstance().getSelfPostion();
@@ -39,10 +40,21 @@ public class PlayerStatusRepository {
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
                 if (documentSnapshots != null) {
                     allPlayerStatus = documentSnapshots.toObjects(PlayerStatus.class);
+                    checkAllReady();
                     allocateStatus();
                 }
             }
         });
+    }
+
+
+    private void checkAllReady() {
+        Boolean allReady = true;
+        for (PlayerStatus status:allPlayerStatus
+             ) {
+            allReady = allReady && status.isReady();
+        }
+        isAllReady.setValue(allReady);
     }
 
     private void allocateStatus() {
@@ -81,19 +93,19 @@ public class PlayerStatusRepository {
     public void resetStatus() {
         PlayerStatus playerStatus1 = new PlayerStatus(1,
                 PlayerRepository.getInstance().getPlayer().getValue().get(0).getName(),
-                3, null, null, 0);
+                3, null, null, 0, false);
         PlayerStatus playerStatus2 = new PlayerStatus(2,
                 PlayerRepository.getInstance().getPlayer().getValue().get(1).getName(),
-                3, null, null, 0);
+                3, null, null, 0, false);
         PlayerStatus playerStatus3 = new PlayerStatus(3,
                 PlayerRepository.getInstance().getPlayer().getValue().get(2).getName(),
-                3, null, null, 0);
+                3, null, null, 0, false);
         PlayerStatus playerStatus4 = new PlayerStatus(4,
                 PlayerRepository.getInstance().getPlayer().getValue().get(3).getName(),
-                3, null, null, 0);
+                3, null, null, 0, false);
         PlayerStatus playerStatus5 = new PlayerStatus(5,
                 PlayerRepository.getInstance().getPlayer().getValue().get(4).getName(),
-                3, null, null, 0);
+                3, null, null, 0, false);
 
         playerStatusReference.document("PlayerStatus1").set(playerStatus1);
         playerStatusReference.document("PlayerStatus2").set(playerStatus2);
@@ -101,4 +113,9 @@ public class PlayerStatusRepository {
         playerStatusReference.document("PlayerStatus4").set(playerStatus4);
         playerStatusReference.document("PlayerStatus5").set(playerStatus5);
     }
+
+    public void setSelfReady() {
+
+    }
+
 }

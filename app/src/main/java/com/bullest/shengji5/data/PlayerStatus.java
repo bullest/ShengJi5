@@ -13,17 +13,27 @@ public class PlayerStatus {
     private Card friendCard;
     private List<Card> showCards;
     private int point;
+    private boolean isReady;
 
     public PlayerStatus() {
     }
 
-    public PlayerStatus(int position, String name, int grade, Card friendCard, List<Card> showCards, int point) {
+    public PlayerStatus(int position, String name, int grade, Card friendCard, List<Card> showCards, int point, boolean isReady) {
         this.position = position;
         this.name = name;
         this.grade = grade;
         this.point = point;
         this.friendCard = friendCard;
         this.showCards = showCards;
+        this.isReady = isReady;
+    }
+
+    public boolean isReady() {
+        return isReady;
+    }
+
+    public void setReady(boolean ready) {
+        isReady = ready;
     }
 
     public int getPosition() {

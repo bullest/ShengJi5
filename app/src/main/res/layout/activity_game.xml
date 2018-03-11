@@ -12,6 +12,7 @@
         android:orientation="vertical"
         >
 
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/players_status_view"
             android:layout_width="match_parent"
@@ -20,84 +21,176 @@
             >
         </android.support.v7.widget.RecyclerView>
 
-        <LinearLayout
-            android:id="@+id/round_view"
+
+        <ViewSwitcher
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="3"
-            android:background="@drawable/border"
-            android:numColumns="2"
-            android:orientation="vertical">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_weight="1"
-                android:layout_height="0dp"
-                android:orientation="horizontal">
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/player1_round_card"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/border"
-                    android:paddingStart="8dp"></android.support.v7.widget.RecyclerView>
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/player2_round_card"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/border"
-                    android:paddingStart="8dp"></android.support.v7.widget.RecyclerView>
-            </LinearLayout>
+            android:layout_weight="4"
+            android:id="@+id/view_switcher">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_weight="1"
-                android:layout_height="0dp"
+                android:layout_height="match_parent"
                 android:orientation="horizontal">
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/player3_round_card"
+                <LinearLayout
                     android:layout_width="0dp"
+                    android:layout_weight="2"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/border"
-                    android:paddingStart="8dp"></android.support.v7.widget.RecyclerView>
+                    android:orientation="vertical"
+                    >
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/player4_round_card"
+                    <TextView
+                        android:id="@+id/show_suit_player"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:textAlignment="center"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        tools:text="Tink"/>
+
+                    <TextView
+                        android:id="@+id/show_suit"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:textAlignment="center"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        tools:text="♥"/>
+
+                    <TextView
+                        android:id="@+id/show_suit_weight"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:textAlignment="center"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        tools:text="X2"/>
+                </LinearLayout>
+
+                <GridLayout
                     android:layout_width="0dp"
+                    android:layout_weight="8"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/border"
-                    android:paddingStart="8dp"></android.support.v7.widget.RecyclerView>
-            </LinearLayout>
+                    android:columnCount="2"
+                    android:rowCount="3"
+                    android:orientation="horizontal"
+                    android:alignmentMode="alignBounds">
+
+                    <Button
+                        android:id="@+id/show_suit_dawang"
+                        android:text="大王"
+                        android:layout_columnWeight="1"/>
+
+                    <Button
+                        android:id="@+id/show_suit_xiaowang"
+                        android:text="小王"
+                        android:layout_columnWeight="1"/>
+
+                    <Button
+                        android:id="@+id/show_suit_heart"
+                        android:text="♥"
+                        android:layout_columnWeight="1"/>
+
+                    <Button
+                        android:id="@+id/show_suit_spade"
+                        android:text="♠"
+                        android:layout_columnWeight="1"/>
+
+                    <Button
+                        android:id="@+id/show_suit_diamond"
+                        android:text="♦"
+                        android:layout_columnWeight="1"/>
+
+                    <Button
+                        android:id="@+id/show_suit_club"
+                        android:text="♣"
+                        android:layout_columnWeight="1"/>
+
+                </GridLayout>
+           </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/round_view"
+                android:layout_height="match_parent"
                 android:layout_width="match_parent"
-                android:layout_weight="1"
-                android:layout_height="0dp"
-                android:orientation="horizontal">
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/player5_round_card"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                android:background="@drawable/border"
+                android:numColumns="2"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/border"
-                    android:paddingStart="8dp"></android.support.v7.widget.RecyclerView>
+                    android:layout_height="0dp"
+                    android:orientation="horizontal">
 
-                <Button
-                    android:layout_width="0dp"
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/player1_round_card"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/border"
+                        android:paddingStart="8dp"></android.support.v7.widget.RecyclerView>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/player2_round_card"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/border"
+                        android:paddingStart="8dp"></android.support.v7.widget.RecyclerView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_weight="1"
-                    android:layout_height="match_parent"
-                    android:textAlignment="center"
-                    android:textStyle="bold"
-                    tools:text="出牌"/>
+                    android:layout_height="0dp"
+                    android:orientation="horizontal">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/player3_round_card"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/border"
+                        android:paddingStart="8dp"></android.support.v7.widget.RecyclerView>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/player4_round_card"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/border"
+                        android:paddingStart="8dp"></android.support.v7.widget.RecyclerView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="0dp"
+                    android:orientation="horizontal">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/player5_round_card"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/border"
+                        android:paddingStart="8dp"></android.support.v7.widget.RecyclerView>
+
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:textAlignment="center"
+                        android:textStyle="bold"
+                        tools:text="出牌"/>
+                </LinearLayout>
+
             </LinearLayout>
 
-        </LinearLayout>
+        </ViewSwitcher>
 
         <LinearLayout
             android:layout_width="match_parent"

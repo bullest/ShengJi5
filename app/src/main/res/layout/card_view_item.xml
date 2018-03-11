@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:padding="2dp">
+    <com.bullest.shengji5.view.PokerCardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/poker_item">
+
+    </com.bullest.shengji5.view.PokerCardView>
+
+</android.support.constraint.ConstraintLayout>

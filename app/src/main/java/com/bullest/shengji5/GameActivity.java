@@ -2,6 +2,7 @@ package com.bullest.shengji5;
 
 import android.app.Activity;
 import android.arch.lifecycle.Observer;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +27,7 @@ import com.bullest.shengji5.playerStatus.PlayerStatusAdapter;
 import com.bullest.shengji5.playerStatus.PlayerStatusViewModel;
 import com.bullest.shengji5.roundCard.RoundCardAdapter;
 import com.bullest.shengji5.roundCard.RoundCardViewModel;
+import com.github.javiersantos.bottomdialogs.BottomDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -68,6 +70,19 @@ public class GameActivity extends AppCompatActivity {
         initPlayerStatus();
         initRoundCard();
         initHandCard();
+
+        new BottomDialog.Builder(this)
+                .setTitle("准备")
+                .setContent("第一轮比赛，先亮主者坐庄。")
+                .setPositiveText("开始")
+                .onPositive(new BottomDialog.ButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull BottomDialog bottomDialog) {
+                        mPlayerStatusViewModel.setSelfReady();
+                    }
+                })
+                .show();
+
 
 //        sendButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -146,7 +161,7 @@ public class GameActivity extends AppCompatActivity {
         mHandCardViewModel.getHandCard(CARD_SUIT.JOKER).observe(this, new Observer<List<Card>>() {
             @Override
             public void onChanged(@Nullable List<Card> cards) {
-                masterCardsView.setAdapter(new RoundCardAdapter(cards));
+                masterCardsView.setAdapter(new SelectableCardsAdapter(cards));
             }
         });
 
@@ -158,7 +173,7 @@ public class GameActivity extends AppCompatActivity {
         mHandCardViewModel.getHandCard(CARD_SUIT.SPADE).observe(this, new Observer<List<Card>>() {
             @Override
             public void onChanged(@Nullable List<Card> cards) {
-                spadeCardsView.setAdapter(new RoundCardAdapter(cards));
+                spadeCardsView.setAdapter(new SelectableCardsAdapter(cards));
             }
         });
 
@@ -169,7 +184,7 @@ public class GameActivity extends AppCompatActivity {
         mHandCardViewModel.getHandCard(CARD_SUIT.HEART).observe(this, new Observer<List<Card>>() {
             @Override
             public void onChanged(@Nullable List<Card> cards) {
-                heartCardsView.setAdapter(new RoundCardAdapter(cards));
+                heartCardsView.setAdapter(new SelectableCardsAdapter(cards));
             }
         });
 
@@ -180,7 +195,7 @@ public class GameActivity extends AppCompatActivity {
         mHandCardViewModel.getHandCard(CARD_SUIT.CLUB).observe(this, new Observer<List<Card>>() {
             @Override
             public void onChanged(@Nullable List<Card> cards) {
-                clubCardsView.setAdapter(new RoundCardAdapter(cards));
+                clubCardsView.setAdapter(new SelectableCardsAdapter(cards));
             }
         });
 
@@ -191,7 +206,7 @@ public class GameActivity extends AppCompatActivity {
         mHandCardViewModel.getHandCard(CARD_SUIT.DIAMOND).observe(this, new Observer<List<Card>>() {
             @Override
             public void onChanged(@Nullable List<Card> cards) {
-                diamondCardsView.setAdapter(new RoundCardAdapter(cards));
+                diamondCardsView.setAdapter(new SelectableCardsAdapter(cards));
             }
         });
     }
